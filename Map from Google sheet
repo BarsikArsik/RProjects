@@ -1,0 +1,13 @@
+library("gsheet")
+library("tidyverse")
+library("leaflet")
+sites <- gsheet2tbl('https://docs.google.com/spreadsheets/d/1SN6nwTxAGZ87pwvCfpHpHxNTgNP78TWkpgMeKGjEFRs/edit?usp=sharing')
+sites %>%
+  leaflet() %>%
+  addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+  addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") %>%
+  addLayersControl(baseGroups = c("Toner Lite", "World Imagery")) %>%
+  addMarkers(label = sites$ID,
+             clusterOptions = markerClusterOptions(),
+             popup = sites$`Description`,
+             labelOptions = labelOptions(noHide = T))
